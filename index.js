@@ -17,12 +17,86 @@ const uri = process.env.DB_PATH;
 let client = new MongoClient(uri, { useNewUrlParser: true,
     useUnifiedTopology: true });
 
+    //Get Route
+
+    app.get('/homeInfo',(req,res) =>{
+        client = new MongoClient(uri, { useNewUrlParser: true });
+        client.connect(err => {
+            const collection = client.db("airCNC").collection("homeInfo");
+            collection.find().toArray((err,documents)=>{
+                if(err){
+                    console.log(err)
+                    res.status(500).send({message:err});
+                }
+                else{
+                    res.send(documents);
+                }
+            });
+            client.close();
+          });
+    })
+
+    app.get('/experiences',(req,res) =>{
+        client = new MongoClient(uri, { useNewUrlParser: true });
+        client.connect(err => {
+            const collection = client.db("airCNC").collection("experiences");
+            collection.find().toArray((err,documents)=>{
+                if(err){
+                    console.log(err)
+                    res.status(500).send({message:err});
+                }
+                else{
+                    res.send(documents);
+                }
+            });
+            client.close();
+          });
+    })
+
+    //Post Route
+
+    app.post('/homeInfo',(req,res) => {
+        const info = req.body;
+        client = new MongoClient(uri, { useNewUrlParser: true });
+        client.connect(err => {
+            const collection = client.db("airCNC").collection("homeInfo");
+            collection.insert(info,(err,result)=>{
+                if(err){
+                    console.log(err)
+                    res.status(500).send({message:err});
+                }
+                else{
+                    res.send(result.ops[0]);
+                }
+            });
+            client.close();
+          });
+    })
+
+    app.post('/experiences',(req,res) => {
+        const info = req.body;
+        client = new MongoClient(uri, { useNewUrlParser: true });
+        client.connect(err => {
+            const collection = client.db("airCNC").collection("experiences");
+            collection.insert(info,(err,result)=>{
+                if(err){
+                    console.log(err)
+                    res.status(500).send({message:err});
+                }
+                else{
+                    res.send(result.ops[0]);
+                }
+            });
+            client.close();
+          });
+    })
+
     app.post('/guestInfo',(req,res) => {
-        const product = req.body;
+        const info = req.body;
         client = new MongoClient(uri, { useNewUrlParser: true });
         client.connect(err => {
             const collection = client.db("airCNC").collection("guestInfo");
-            collection.insert(product,(err,result)=>{
+            collection.insert(info,(err,result)=>{
                 if(err){
                     console.log(err)
                     res.status(500).send({message:err});
