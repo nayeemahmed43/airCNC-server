@@ -53,6 +53,23 @@ let client = new MongoClient(uri, { useNewUrlParser: true,
           });
     })
 
+    app.get('/reservationInfo',(req,res) =>{
+        client = new MongoClient(uri, { useNewUrlParser: true });
+        client.connect(err => {
+            const collection = client.db("airCNC").collection("reservationInfo");
+            collection.find().toArray((err,documents)=>{
+                if(err){
+                    console.log(err)
+                    res.status(500).send({message:err});
+                }
+                else{
+                    res.send(documents);
+                }
+            });
+            client.close();
+          });
+    })
+
     //Post Route
 
     app.post('/homeInfo',(req,res) => {
