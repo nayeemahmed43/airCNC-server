@@ -109,4 +109,22 @@ let client = new MongoClient(uri, { useNewUrlParser: true,
           });
     })
 
+    app.post('/reservationInfo',(req,res) => {
+        const info = req.body;
+        client = new MongoClient(uri, { useNewUrlParser: true });
+        client.connect(err => {
+            const collection = client.db("airCNC").collection("reservationInfo");
+            collection.insert(info,(err,result)=>{
+                if(err){
+                    console.log(err)
+                    res.status(500).send({message:err});
+                }
+                else{
+                    res.send(result.ops[0]);
+                }
+            });
+            client.close();
+          });
+    })
+
 app.listen(4200, () => console.log('Listening to port 4200'));
